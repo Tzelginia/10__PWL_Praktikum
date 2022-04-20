@@ -120,4 +120,11 @@ class ArticleController extends Controller
     {
         //
     }
+    //PRAKTIKUM 3
+    public function cetak_pdf()
+    {
+        $articles = Article::all();
+        $pdf = PDF::loadview('articles.articles_pdf', ['articles' => $articles]);
+        return $pdf->stream();
+    }
 }
