@@ -77,6 +77,8 @@ class ArticleController extends Controller
     //PRAKTIKUM 2
     public function edit($id)
     {
+        $article = Article::find($id);
+        return view('articles.edit', ['article' => $article]);
     }
 
     /**
@@ -91,7 +93,22 @@ class ArticleController extends Controller
     //PRAKTIKUM 2
     public function update(Request $request, $id)
     {
+        $article = Article::find($id);
+
+        $article->title = $request->title;
+        $article->content = $request->content;
+
+        if ($article->featured_image && file_exists(storage_path('app/public/' . $article->featured_image))) {
+            Storage::delete('public/' . $article->featured_image);
+        }
+        $image_name = $request->file('featured_image')->store('images', 'public');
+        $article->featured_image = $image_name;
+
+        $article->save();
+
+        return 'Artikel berhasil diubah';
     }
+
 
     /**
      * Remove the specified resource from storage.
